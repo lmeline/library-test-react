@@ -1,0 +1,37 @@
+{
+    "layout": [3, "horizontal"],
+    "zones": [
+        {
+            "id":1,
+            "displayMode": "horizontal",
+            "tiles": [
+                {
+                    "id":1,
+                    "name": "Tile 1",
+                    "src": "_local_/_sideloaded_/machin_chouette"
+                },
+                {
+                    "id":2,
+                    "name": "Tile 2",
+                    "src": "git.door43.org/BurritoTruck/super_marrant"
+                }
+            ]
+        },
+        {
+            "id":2,
+            "displayMode": "vertical",
+            "tiles": [
+                {
+                    "id":1,
+                    "name": "Tile 1",
+                    "src": "_local_/_sideloaded_/machin_chouette"
+                },
+                {
+                    "id":2,
+                    "name": "Tile 2",
+                    "src": "git.door43.org/BurritoTruck/super_marrant"
+                }
+            ]
+        }
+    ]
+}
