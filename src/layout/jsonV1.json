@@ -1,5 +1,5 @@
 {
-    "layout": [3, "horizontal"],
+    "layout": ["horizontal",true,"vertical"],
     "zones": [
         {
             "id":1,
