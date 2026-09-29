@@ -6,6 +6,7 @@ import { Separator } from "react-resizable-panels";
 export default function PanWorkspaceManager() {
   const [zones, setZones] = useState(config.zones);
   const [rotation, setRotation] = useState(false);
+
   const [modulo, setModulo] = useState(0);
 
   const addZone = () => {
@@ -48,7 +49,6 @@ export default function PanWorkspaceManager() {
     });
     setZones(newZones);
   };
-  console.log("modulo", modulo);
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div>
@@ -89,10 +89,93 @@ export default function PanWorkspaceManager() {
               </Panel>,
             ])}
           </Group> */}
-        <Group
-          style={{ minHeight: "40vh" }}
-          orientation={rotation ? "vertical" : "horizontal"}
-        >
+        <Group style={{ minHeight: "100vh",minWidth:'400px' }} orientation={config.init}>
+          {config.layout.zoneId.map((arrayIds, idArr) => {
+            if (idArr > 0) {
+              if (arrayIds.length > 1) {
+                return (
+                  <Group
+                    style={{ minHeight: "100vh" }}
+                    orientation={config.layout.order[idArr]}
+                  >
+                    {arrayIds.map((idZ, id2) => {
+                      if (!id2 > 0) {
+                        
+                        return [
+                          <Separator
+                            key={`sep-${config.zones[idZ].id}`}
+                            style={{ height: 4, background: "blue" }}
+                          />,
+                          <Panel
+                            key={config.zones[idZ].id}
+                            id={String(config.zones[idZ].id)}
+                            minSize={10}
+                          >
+                            <PanWorkspaceZone
+                              zone={config.zones[idZ]}
+                              onRemoveZone={removeZone}
+                              onUpdateZone={updateZone}
+                            />
+                          </Panel>,
+                        ];
+                      } else {
+                        return (
+                          <Panel
+                            key={config.zones[idZ].id}
+                            id={String(config.zones[idZ].id)}
+                            minSize={10}
+                          >
+                            <PanWorkspaceZone
+                              zone={config.zones[idZ]}
+                              onRemoveZone={removeZone}
+                              onUpdateZone={updateZone}
+                            />
+                          </Panel>
+                        );
+                      }
+                    })}
+                  </Group>
+                );
+              } else {
+                return [
+                  <Separator
+                    key={`sep-${config.zones[arrayIds[0]].id}`}
+                    style={{ height: 4, background: "green" }}
+                  />,
+                  <Panel
+                    key={config.zones[arrayIds[0]].id}
+                    id={String(config.zones[arrayIds[0]].id)}
+                    minSize={10}
+                  >
+                    <PanWorkspaceZone
+                      zone={config.zones[arrayIds[0]]}
+                      onRemoveZone={removeZone}
+                      onUpdateZone={updateZone}
+                    />
+                  </Panel>,
+                ];
+              }
+            } else {
+              return (
+                <Panel
+                  key={config.zones[arrayIds[0]].id}
+                  id={String(config.zones[arrayIds[0]].id)}
+                  minSize={10}
+                >
+                  <PanWorkspaceZone
+                    zone={config.zones[arrayIds[0]]}
+                    onRemoveZone={removeZone}
+                    onUpdateZone={updateZone}
+                  />
+                </Panel>
+              );
+            }
+          })}
+          {/* {config.order.map((orientation) => {
+            <Group style={{ minHeight: "40vh" }} orientation={orientation}>
+              
+            </Group>;
+          })}
           {zones.flatMap((zone, index) => [
             index > 0 && (
               <Separator
@@ -107,7 +190,7 @@ export default function PanWorkspaceManager() {
                 onUpdateZone={updateZone}
               />
             </Panel>,
-          ])}
+          ])} */}
         </Group>
       </div>
     </div>
