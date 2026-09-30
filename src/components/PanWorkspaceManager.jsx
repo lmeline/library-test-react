@@ -3,6 +3,35 @@ import PanWorkspaceZone from "./PanWorkspaceZone";
 import config from "../layout/jsonV1.json";
 import { Group, Panel } from "react-resizable-panels";
 import { Separator } from "react-resizable-panels";
+
+const ZoneWithSeparator = (zone, zoneID, removeZone, updateZone) => {
+  return [
+    <Separator
+      key={`sep-${zoneID}`}
+      style={{ height: 4, background: "green" }}
+    />,
+    <Panel key={zoneID} id={String(zoneID)} minSize={10}>
+      <PanWorkspaceZone
+        zone={zone}
+        onRemoveZone={removeZone}
+        onUpdateZone={updateZone}
+      />
+    </Panel>,
+  ];
+};
+
+const ZonePan = (zone, zoneID, removeZone, updateZone) => {
+  return (
+    <Panel key={zoneID} id={String(zoneID)} minSize={10}>
+      <PanWorkspaceZone
+        zone={zone}
+        onRemoveZone={removeZone}
+        onUpdateZone={updateZone}
+      />
+    </Panel>
+  );
+};
+
 export default function PanWorkspaceManager() {
   const [zones, setZones] = useState(config.zones);
   const [rotation, setRotation] = useState(false);
@@ -71,126 +100,56 @@ export default function PanWorkspaceManager() {
         >{`rotation -->`}</button>
       </div>
 
-      <div style={{ flex: 1, minHeight: 0, height: "100vh" }}>
-        {/* <Group orientation="horizontal">
-            {zones.flatMap((zone, index) => [
-              index > 0 && (
-                <Separator
-                  key={`sep-${zone.id}`}
-                  style={{ width: 4, background: "red" }}
-                />
-              ),
-              <Panel key={zone.id} id={String(zone.id)} minSize={10}>
-                <PanWorkspaceZone
-                  zone={zone}
-                  onRemoveZone={removeZone}
-                  onUpdateZone={updateZone}
-                />
-              </Panel>,
-            ])}
-          </Group> */}
-        <Group style={{ minHeight: "100vh",minWidth:'400px' }} orientation={config.init}>
+      <div style={{ flex: 1, minHeight: 0 }}>
+        <Group
+          style={{ minHeight: "40vh"}}
+          orientation={config.init}
+        >
           {config.layout.zoneId.map((arrayIds, idArr) => {
-            if (idArr > 0) {
-              if (arrayIds.length > 1) {
-                return (
-                  <Group
-                    style={{ minHeight: "100vh" }}
-                    orientation={config.layout.order[idArr]}
-                  >
-                    {arrayIds.map((idZ, id2) => {
-                      if (!id2 > 0) {
-                        
-                        return [
-                          <Separator
-                            key={`sep-${config.zones[idZ].id}`}
-                            style={{ height: 4, background: "blue" }}
-                          />,
-                          <Panel
-                            key={config.zones[idZ].id}
-                            id={String(config.zones[idZ].id)}
-                            minSize={10}
-                          >
-                            <PanWorkspaceZone
-                              zone={config.zones[idZ]}
-                              onRemoveZone={removeZone}
-                              onUpdateZone={updateZone}
-                            />
-                          </Panel>,
-                        ];
-                      } else {
-                        return (
-                          <Panel
-                            key={config.zones[idZ].id}
-                            id={String(config.zones[idZ].id)}
-                            minSize={10}
-                          >
-                            <PanWorkspaceZone
-                              zone={config.zones[idZ]}
-                              onRemoveZone={removeZone}
-                              onUpdateZone={updateZone}
-                            />
-                          </Panel>
-                        );
-                      }
-                    })}
-                  </Group>
+            if (arrayIds.length > 1) {
+              return (
+                <Group
+                  style={{ minHeight: "10vh" }}
+                  orientation={config.layout.order[idArr]}
+                >
+                  {arrayIds.map((idZ, id2) => {
+                    if (!id2 > 0) {
+                      return ZoneWithSeparator(
+                        config.zones[idZ],
+                        config.zones[idZ].id,
+                        removeZone,
+                        updateZone,
+                      );
+                    } else {
+                      return ZonePan(
+                        config.zones[idZ],
+                        config.zones[idZ].id,
+                        removeZone,
+                        updateZone,
+                      );
+                    }
+                  })}
+                </Group>
+              );
+            } else {
+              console.log("ZONE",config.zones[arrayIds[0]].id, config.zones[arrayIds[0]])
+              if (!idArr > 0) {
+                return ZoneWithSeparator(
+                  config.zones[arrayIds[0]],
+                  config.zones[arrayIds[0]].id,
+                  removeZone,
+                  updateZone,
                 );
               } else {
-                return [
-                  <Separator
-                    key={`sep-${config.zones[arrayIds[0]].id}`}
-                    style={{ height: 4, background: "green" }}
-                  />,
-                  <Panel
-                    key={config.zones[arrayIds[0]].id}
-                    id={String(config.zones[arrayIds[0]].id)}
-                    minSize={10}
-                  >
-                    <PanWorkspaceZone
-                      zone={config.zones[arrayIds[0]]}
-                      onRemoveZone={removeZone}
-                      onUpdateZone={updateZone}
-                    />
-                  </Panel>,
-                ];
+                return ZonePan(
+                  config.zones[arrayIds[0]],
+                  config.zones[arrayIds[0]].id,
+                  removeZone,
+                  updateZone,
+                );
               }
-            } else {
-              return (
-                <Panel
-                  key={config.zones[arrayIds[0]].id}
-                  id={String(config.zones[arrayIds[0]].id)}
-                  minSize={10}
-                >
-                  <PanWorkspaceZone
-                    zone={config.zones[arrayIds[0]]}
-                    onRemoveZone={removeZone}
-                    onUpdateZone={updateZone}
-                  />
-                </Panel>
-              );
             }
           })}
-          {/* {config.order.map((orientation) => {
-            <Group style={{ minHeight: "40vh" }} orientation={orientation}>
-              
-            </Group>;
-          })}
-          {zones.flatMap((zone, index) => [
-            index > 0 && (
-              <Separator
-                key={`sep-${zone.id}`}
-                style={{ height: 4, background: "red" }}
-              />
-            ),
-            <Panel key={zone.id} id={String(zone.id)} minSize={10}>
-              <PanWorkspaceZone
-                zone={zone}
-                onRemoveZone={removeZone}
-                onUpdateZone={updateZone}
-              />
-            </Panel>,
-          ])} */}
         </Group>
       </div>
     </div>
