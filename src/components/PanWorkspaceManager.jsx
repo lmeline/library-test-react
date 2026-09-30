@@ -4,20 +4,36 @@ import config from "../layout/jsonV1.json";
 import { Group, Panel } from "react-resizable-panels";
 import { Separator } from "react-resizable-panels";
 
-const ZoneWithSeparator = (zone, zoneID, removeZone, updateZone) => {
-  return [
-    <Separator
-      key={`sep-${zoneID}`}
-      style={{ height: 4, background: "green" }}
-    />,
-    <Panel key={zoneID} id={String(zoneID)} minSize={10}>
-      <PanWorkspaceZone
-        zone={zone}
-        onRemoveZone={removeZone}
-        onUpdateZone={updateZone}
-      />
-    </Panel>,
-  ];
+const ZoneWithSeparator = (
+  zone,
+  zoneID,
+  orientation,
+  removeZone,
+  updateZone,
+) => {
+  return (
+    <>
+      {orientation === "vertical" ? (
+        <Separator
+          key={`sep-${zoneID}`}
+          style={{ height: 4, background: "green" }}
+        />
+      ) : (
+        <Separator
+          key={`sep-${zoneID}`}
+          style={{ width: 4, background: "green" }}
+        />
+      )}
+
+      <Panel key={zoneID} id={String(zoneID)} minSize={10}>
+        <PanWorkspaceZone
+          zone={zone}
+          onRemoveZone={removeZone}
+          onUpdateZone={updateZone}
+        />
+      </Panel>
+    </>
+  );
 };
 
 const ZonePan = (zone, zoneID, removeZone, updateZone) => {
@@ -80,7 +96,7 @@ export default function PanWorkspaceManager() {
   };
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <div>
+      {/* <div>
         <button style={{ margin: "8px" }} onClick={addZone}>
           + Zone
         </button>
@@ -98,25 +114,25 @@ export default function PanWorkspaceManager() {
             setModulo((prev) => (prev + 1) % 2);
           }}
         >{`rotation -->`}</button>
-      </div>
+      </div> */}
 
-      <div style={{ flex: 1, minHeight: 0 }}>
-        <Group
-          style={{ minHeight: "40vh"}}
-          orientation={config.init}
-        >
-          {config.layout.zoneId.map((arrayIds, idArr) => {
-            if (arrayIds.length > 1) {
-              return (
+      <Group style={{ height: "100vh" }} orientation={config.layout.init}>
+        {config.layout.zoneId.map((arrayIds, idArr) => {
+          if (arrayIds.length > 1) {
+            return (
+              <Panel key={idArr} id={String(idArr)}>
                 <Group
-                  style={{ minHeight: "10vh" }}
+                  style={{ height: "100%" }}
                   orientation={config.layout.order[idArr]}
                 >
                   {arrayIds.map((idZ, id2) => {
-                    if (!id2 > 0) {
+                    if (id2 > 0) {
+                      console.log("separator", idZ, id2);
+
                       return ZoneWithSeparator(
                         config.zones[idZ],
                         config.zones[idZ].id,
+                        config.layout.order[idArr],
                         removeZone,
                         updateZone,
                       );
@@ -130,28 +146,28 @@ export default function PanWorkspaceManager() {
                     }
                   })}
                 </Group>
+              </Panel>
+            );
+          } else {
+            if (idArr > 0) {
+              return ZoneWithSeparator(
+                config.zones[arrayIds[0]],
+                config.zones[arrayIds[0]].id,
+                config.layout.init,
+                removeZone,
+                updateZone,
               );
             } else {
-              console.log("ZONE",config.zones[arrayIds[0]].id, config.zones[arrayIds[0]])
-              if (!idArr > 0) {
-                return ZoneWithSeparator(
-                  config.zones[arrayIds[0]],
-                  config.zones[arrayIds[0]].id,
-                  removeZone,
-                  updateZone,
-                );
-              } else {
-                return ZonePan(
-                  config.zones[arrayIds[0]],
-                  config.zones[arrayIds[0]].id,
-                  removeZone,
-                  updateZone,
-                );
-              }
+              return ZonePan(
+                config.zones[arrayIds[0]],
+                config.zones[arrayIds[0]].id,
+                removeZone,
+                updateZone,
+              );
             }
-          })}
-        </Group>
-      </div>
+          }
+        })}
+      </Group>
     </div>
   );
 }

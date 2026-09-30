@@ -33,8 +33,8 @@ export default function PanWorkspaceZone({ zone, onRemoveZone }) {
     });
   }
   return (
-    <div style={{ flex: 1, border: "2px solid #000000", padding: "8px" }}>
-      <div
+    <div style={{ height:'100%'}}>
+      {/* <div
         style={{
           gap: "8px",
           display: "flex",
@@ -45,15 +45,14 @@ export default function PanWorkspaceZone({ zone, onRemoveZone }) {
         Zone {id}
         <button onClick={() => onRemoveZone(id)}>✕ Zone</button>
         <button onClick={() => addTile()}>+ Tile</button>
-      </div>
-      <div>
-        <Group>
+      </div> */}
+        <Group style={{height:`100%`}}>
           {tileUi &&
             tileUi.flatMap((tile, index) => [
               index > 0 && (
                 <Separator
                   key={`sep-${tile.id}`}
-                  style={{ width: 4, background: "#000000" }}
+                  style={{ width: 4, background: "#f90404" }}
                 />
               ),
               <Panel minSize={30} key={tile.id} id={tile.id}>
@@ -61,7 +60,6 @@ export default function PanWorkspaceZone({ zone, onRemoveZone }) {
               </Panel>,
             ])}
         </Group>
-      </div>
     </div>
   );
 }
