@@ -5,7 +5,6 @@ import { Panel } from "react-resizable-panels";
 import { useEffect, useState } from "react";
 export default function PanWorkspaceZone({ zone, onRemoveZone }) {
   const [tileUi, setTileUi] = useState(null);
-  console.log(tileUi);
   const { id } = zone;
 
   useEffect(() => {
@@ -23,9 +22,7 @@ export default function PanWorkspaceZone({ zone, onRemoveZone }) {
     ]);
   }
   function removeTile(id) {
-    console.log("indice de la tile", id);
     let removeIndexTile = tileUi.findIndex((e) => e.id === id);
-    console.log("INDICE DANS LE Tableau", removeIndexTile);
     setTileUi((prev) => {
       let prev2 = [...prev]
       prev2.splice(removeIndexTile, 1);
@@ -52,7 +49,7 @@ export default function PanWorkspaceZone({ zone, onRemoveZone }) {
               index > 0 && (
                 <Separator
                   key={`sep-${tile.id}`}
-                  style={{ width: 4, background: "#f90404" }}
+                  style={{ width: 4}}
                 />
               ),
               <Panel minSize={30} key={tile.id} id={tile.id}>
